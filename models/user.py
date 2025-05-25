@@ -1,4 +1,4 @@
-from pydantic import Field, ConfigDict
+from pydantic import Field
 
 from db import db
 from models.MongoModelBase import MongoModelBase

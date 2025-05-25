@@ -42,3 +42,7 @@ class TypedCollection(Generic[T]):
     async def count_documents(self, filter_: dict[str, Any]) -> PositiveInt:
         """Count documents matching filter"""
         return await self._collection.count_documents(filter_)
+
+    def __repr__(self) -> str:
+        """Return a string representation of the collection."""
+        return f"{self.__class__.__name__}(collection={self._collection.name}, model={self._model.__name__})"
