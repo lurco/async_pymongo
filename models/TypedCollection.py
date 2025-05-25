@@ -19,16 +19,16 @@ class TypedCollection(Generic[T]):
         doc = model_instance.model_dump(by_alias=True)
         await self._collection.insert_one(doc)
 
-    async def find_one(self, query: dict[str, Any]) -> T | None:
+    async def find_one(self, filter_: dict[str, Any]) -> T | None:
         """Find one document and return as Pydantic model"""
-        doc = await self._collection.find_one(query)
+        doc = await self._collection.find_one(filter_)
         if doc:
             return self._model.model_validate(doc)
         return None
 
-    async def find(self, filter_: dict[str, Any]) -> tuple[T, ...]:
+    async def find(self, filter_: dict[str, Any] | None = None) -> tuple[T, ...]:
         """Find multiple documents and return as Pydantic models"""
-        docs = await self._collection.find(filter_).to_list()
+        docs = await self._collection.find(filter_ or {}).to_list()
         return tuple(self._model.model_validate(doc) for doc in docs)
 
     async def update_one(self, filter_: dict[str, Any], update: dict[str, Any]) -> None:
@@ -39,9 +39,11 @@ class TypedCollection(Generic[T]):
         """Delete one document"""
         await self._collection.delete_one(filter_)
 
-    async def count_documents(self, filter_: dict[str, Any]) -> PositiveInt:
+    async def count_documents(
+        self, filter_: dict[str, Any] | None = None
+    ) -> PositiveInt:
         """Count documents matching filter"""
-        return await self._collection.count_documents(filter_)
+        return await self._collection.count_documents(filter_ or {})
 
     def __repr__(self) -> str:
         """Return a string representation of the collection."""
