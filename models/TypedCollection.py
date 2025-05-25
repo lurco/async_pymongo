@@ -26,9 +26,26 @@ class TypedCollection(Generic[T]):
             return self._model.model_validate(doc)
         return None
 
-    async def find(self, filter_: dict[str, Any] | None = None) -> tuple[T, ...]:
-        """Find multiple documents and return as Pydantic models"""
-        docs = await self._collection.find(filter_ or {}).to_list()
+    async def find(
+        self,
+        filter_: dict[str, Any] | None = None,
+        skip: int = 0,
+        limit: int | None = None,
+        sort: list[tuple[str, int]] | None = None,
+    ) -> tuple[T, ...]:
+        """Find multiple documents with pagination and sorting and return as Pydantic models"""
+
+        cursor = self._collection.find(filter_ or {})
+
+        if sort:
+            cursor = cursor.sort(sort)
+        if skip > 0:
+            cursor = cursor.skip(skip)
+        if limit:
+            cursor = cursor.limit(limit)
+
+        docs = await cursor.to_list(length=limit)
+
         return tuple(self._model.model_validate(doc) for doc in docs)
 
     async def update_one(self, filter_: dict[str, Any], update: dict[str, Any]) -> None:
