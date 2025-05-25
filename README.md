@@ -1,4 +1,4 @@
-# PyMongo Test
+# Async PyMongo with better typing and validation for collections - a playground
 
 ---
 
