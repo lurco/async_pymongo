@@ -6,6 +6,8 @@ from typing import Any
 class MongoModelBase(BaseModel):
     """Base Model for a Mongo collection entry - no id, as that is best set up by MongoDB"""
 
+    model_config = ConfigDict(arbitrary_types_allowed=True, populate_by_name=True)
+
     def __repr__(self) -> str:
         """Return a string representation of the model."""
         attrs = []
