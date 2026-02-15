@@ -34,7 +34,7 @@ class TypedCollection(Generic[T]):
         return self._model.model_validate(inserted_doc)
 
     async def find_one(self, filter_: dict[str, Any]) -> T | MongoMixinWithId | None:
-        """Find one document and return as Pydantic model"""
+        """Find one document and return as a Pydantic model"""
         doc = await self._collection.find_one(filter_)
         if doc:
             return self._model.model_validate(doc)
