@@ -1,9 +1,8 @@
 import asyncio
 import random
-import sys
 from decimal import Decimal
 
-from config.logger import CustomFormatter
+from config.logger import logging_handler
 from models import user_collection
 from models.product import product_collection, Product
 from models.user import User
@@ -11,8 +10,6 @@ from faker import Faker
 
 import logging
 
-logging_handler = logging.StreamHandler(sys.stdout)
-logging_handler.setFormatter(CustomFormatter())
 logging.basicConfig(level=logging.INFO, handlers=[logging_handler])
 logger = logging.getLogger(__name__)
 
